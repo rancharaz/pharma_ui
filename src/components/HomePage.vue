@@ -18,12 +18,12 @@
         <li v-for="medicine in filteredMedicines" :key="medicine.id"
           class="relative flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out">
 
-          <span class="text-lg font-medium text-black" @mouseover="hoverMedicine = medicine"
+          <span class="text-lg font-medium text-black cursor-pointer" @mouseover="hoverMedicine = medicine"
             @mouseleave="hoverMedicine = null">
             {{ medicine.name }}
           </span>
 
-          <!-- add 1 med -->
+          <!-- add one med -->
           <button @click="selectMedicine(medicine)"
             class="text-yellow-500 hover:text-yellow-400 focus:outline-none transition duration-300 ease-in-out ml-4">
             +
@@ -34,8 +34,6 @@
             class="absolute left-0 mt-2 p-2 w-full bg-white shadow-lg rounded-lg z-10">
             <p class="text-black">{{ medicine.name }}</p>
           </div>
-
-
         </li>
       </ul>
     </div>
@@ -43,32 +41,35 @@
     <!-- section for med choosen -->
     <div v-if="chosenMedicines.length" class="mt-8 bg-white shadow-md rounded-lg p-6">
       <h2 class="text-xl font-semibold mb-4 text-black">Chosen Medicines</h2>
-      <ul class="space-y-4">
-        <li v-for="(medicine, index) in chosenMedicines" :key="medicine.id"
-          class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out">
 
-          <!-- edit and delete btn -->
-          <div class="flex items-center">
-            <span v-if="!medicine.isEditing" class="text-lg font-medium text-black">
-              {{ medicine.name }}
-            </span>
+      <!-- Wrapping the list with the draggable component -->
+      <draggable v-model="chosenMedicines" item-key="id" class="space-y-4">
+        <template #item="{ element }">
+          <li :key="element.id"
+            class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out">
 
-            <input v-if="medicine.isEditing" v-model="medicine.name" class="p-2 border rounded-md" />
+            <!-- edit and delete btn -->
+            <div class="flex items-center">
+              <span v-if="!element.isEditing" class="text-lg font-medium text-black cursor-pointer">
+                {{ element.name }}
+              </span>
 
-            <button @click="toggleEdit(medicine)"
-              class="ml-4 text-blue-500 hover:text-blue-400 focus:outline-none transition duration-300 ease-in-out">
-              {{ medicine.isEditing ? 'Save' : 'Edit' }}
-            </button>
+              <input v-if="element.isEditing" v-model="element.name" class="p-2 border rounded-md" />
 
-            <button @click="deleteMedicine(index)"
-              class="ml-4 text-red-500 hover:text-red-400 focus:outline-none transition duration-300 ease-in-out">
-              Delete
-            </button>
-          </div>
-        </li>
-      </ul>
+              <button @click="toggleEdit(element)"
+                class="ml-4 text-blue-500 hover:text-blue-400 focus:outline-none transition duration-300 ease-in-out">
+                {{ element.isEditing ? 'Save' : 'Edit' }}
+              </button>
+
+              <button @click="deleteMedicine(element.id)"
+                class="ml-4 text-red-500 hover:text-red-400 focus:outline-none transition duration-300 ease-in-out">
+                Delete
+              </button>
+            </div>
+          </li>
+        </template>
+      </draggable>
     </div>
-
 
     <div v-else class="mt-8 text-center text-gray-500">
       <p>No medicines chosen yet!</p>
@@ -88,7 +89,6 @@ const hoverMedicine = ref(null)
 const showMedicinesList = ref(false)
 
 onMounted(() => {
-  // Initialize the store data
   store.fetchMedicines()
 })
 
@@ -97,8 +97,6 @@ const filteredMedicines = computed(() => {
     medicine.name.toLowerCase().includes(currentInput.value.toLowerCase())
   )
 })
-
-const selectedMedicine = ref(null)
 
 const selectMedicine = (medicine) => {
   store.addMedicineToChosen(medicine)
@@ -136,8 +134,8 @@ const toggleEdit = (medicine) => {
   }
 }
 
-const deleteMedicine = (index) => {
-  store.removeMedicineFromChosen(index)
+const deleteMedicine = (id) => {
+  store.removeMedicineFromChosenById(id)
 }
 
 const chosenMedicines = computed(() => store.chosenMedicines)
