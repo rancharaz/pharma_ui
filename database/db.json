@@ -1,0 +1,37 @@
+{
+  "existingMedicines": [
+    {
+      "name": "Cod Liver Oilss",
+      "id": "3"
+    },
+    {
+      "id": "4",
+      "name": "Ashwaghanda"
+    },
+    {
+      "id": 1736876173168,
+      "name": "sss"
+    },
+    {
+      "id": 1736883417245,
+      "name": "dsadad"
+    },
+    {
+      "id": 1736883792707,
+      "name": "dsdsad"
+    },
+    {
+      "id": 1736921129961,
+      "name": "ss"
+    },
+    {
+      "id": 1736921134546,
+      "name": "ssss"
+    },
+    {
+      "id": 1736921639986,
+      "name": "s"
+    }
+  ],
+  "chosenMedicines": []
+}
