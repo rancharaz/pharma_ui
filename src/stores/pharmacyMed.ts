@@ -40,7 +40,7 @@ export const usePharmacyMedsStore = defineStore('pharmacyMeds', {
       }
     },
 
-    // Update medicine name in backend and locally
+    /* update to json server */
     async updateMedicineName(medicine: Medicine) {
       try {
         const response = await axios.put<Medicine>(`http://localhost:5000/existingMedicines/${medicine.id}`, {
@@ -61,14 +61,14 @@ export const usePharmacyMedsStore = defineStore('pharmacyMeds', {
       }
     },
 
-    // Remove medicine from both chosen and existing lists
+    /* delete both ways */
     async removeMedicineFromChosen(index: number) {
       const medicineToDelete = this.chosenMedicines[index]
       try {
         await axios.delete(`http://localhost:5000/existingMedicines/${medicineToDelete.id}`)
-        // Remove from local list
+        
         this.chosenMedicines.splice(index, 1)
-        // Remove from existingMedicines list too
+        
         const existingIndex = this.existingMedicines.findIndex(item => item.id === medicineToDelete.id)
         if (existingIndex !== -1) {
           this.existingMedicines.splice(existingIndex, 1)
@@ -77,8 +77,7 @@ export const usePharmacyMedsStore = defineStore('pharmacyMeds', {
         console.error('Error deleting medicine:', error)
       }
     },
-
-    // Update the order of chosenMedicines after drag
+    /* update after drags */
     updateChosenOrder(newOrder: Medicine[]) {
       this.chosenMedicines = newOrder
     }
